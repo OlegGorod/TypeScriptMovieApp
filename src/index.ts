@@ -1,4 +1,5 @@
 import { movieService } from "./typescript/services/MovieService";
+import { apiLinks } from "./typescript/services/apiLinks";
 
 
 
@@ -15,10 +16,8 @@ const favoriteBtn = Array.from(document.querySelectorAll('.bi-heart-fill')) as S
 const favoriteModal = document.querySelector('#favorite-movies') as HTMLDivElement;
 const container = document?.getElementById('film-container') as HTMLDivElement;
 
-const APIKEY = 'api_key=04c35731a5ee918f014970082a0088b1';
-const RATEDAPI = 'https://api.themoviedb.org/3/movie/top_rated?' + APIKEY + '&page=';
-const POPAPI = 'https://api.themoviedb.org/3/movie/popular?' + APIKEY + '&page=';
-const UPCOMING = 'https://api.themoviedb.org/3/movie/upcoming?' + APIKEY + '&page=';
+
+const { RATEDAPI, POPAPI, UPCOMING, SEARCHAPI } = apiLinks;
 
 export async function render(): Promise<void> {
     // TODO render your app here
@@ -39,7 +38,7 @@ export async function render(): Promise<void> {
     }
 
     const renderMovies = async (data: MovieData) => {
-        data.results.map( item => {
+        data.results.map(item => {
             const movieCard = document.createElement('div');
             movieCard.classList.add('col-lg-3', 'col-md-4', 'col-12', 'p-2')
             container.append(movieCard)
@@ -92,7 +91,7 @@ export async function render(): Promise<void> {
             const ratedMovies = await movieService.getMovies(RATEDAPI);
             container.innerHTML = ''
             renderMovies(ratedMovies)
-            
+
         };
         if (target && target.matches('#popular')) {
             numberOfPage = 1
@@ -114,6 +113,19 @@ export async function render(): Promise<void> {
         console.log(nextPageMovies)
         renderMovies(nextPageMovies)
 
+    });
+
+    const handleSearch = async () => {
+        const searchValue = searchInput.value;
+        const searchMovies = await movieService.getMovies(SEARCHAPI + searchValue);
+        console.log(searchMovies)
+        container.innerHTML = ''
+        renderMovies(searchMovies)
+        searchInput.value = ''
+    }
+    
+    submitButton.addEventListener("click", (e) => {
+        handleSearch();
     });
 
 }
