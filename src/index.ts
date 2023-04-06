@@ -13,16 +13,19 @@ const releaseInfo = document.querySelectorAll('.text-muted');
 const description = document.querySelectorAll('.card-text');
 const favoriteBtn = Array.from(document.querySelectorAll('.bi-heart-fill')) as SVGSVGElement[];
 const favoriteModal = document.querySelector('#favorite-movies') as HTMLDivElement;
+const container = document?.getElementById('film-container') as HTMLDivElement;
 
-console.log(movie)
+const APIKEY = 'api_key=04c35731a5ee918f014970082a0088b1';
+const RATEDAPI = 'https://api.themoviedb.org/3/movie/top_rated?' + APIKEY + '&page=';
+const POPAPI = 'https://api.themoviedb.org/3/movie/popular?' + APIKEY + '&page=';
+const UPCOMING = 'https://api.themoviedb.org/3/movie/upcoming?' + APIKEY + '&page=';
+
 export async function render(): Promise<void> {
     // TODO render your app here
 
-    const listOfMovies = await movieService.getMovies();
-    let arrayOfMovies = listOfMovies;
-    let numberOfPage = 1;
-    console.log(arrayOfMovies)
+    const listOfMovies = await movieService.getMovies(POPAPI);
 
+    let numberOfPage = 1;
 
     interface MovieData {
         results: MovieObject[]
@@ -36,12 +39,11 @@ export async function render(): Promise<void> {
     }
 
     const renderMovies = async (data: MovieData) => {
-        console.log(data)
-        data.results.map(item => {
+        data.results.map( item => {
             const movieCard = document.createElement('div');
             movieCard.classList.add('col-lg-3', 'col-md-4', 'col-12', 'p-2')
-            document?.getElementById('film-container')?.append(movieCard)
-            const { id, overview, release_date, poster_path, title } = item
+            container.append(movieCard)
+            const { id, overview, release_date, poster_path } = item
             movieCard.innerHTML = `
             <div class="card shadow-sm">
                                 <img
@@ -80,27 +82,34 @@ export async function render(): Promise<void> {
         })
 
     }
-    renderMovies(arrayOfMovies)
+    renderMovies(listOfMovies)
 
 
     btnTrigger?.addEventListener('click', async (e) => {
         const target = e.target as Element;
         if (target && target.matches('#top_rated')) {
-            const ratedMovies = await movieService.showRated();
+            numberOfPage = 1
+            const ratedMovies = await movieService.getMovies(RATEDAPI);
+            container.innerHTML = ''
             renderMovies(ratedMovies)
+            
         };
         if (target && target.matches('#popular')) {
-            const popularMovies = await movieService.showPopular();
+            numberOfPage = 1
+            const popularMovies = await movieService.getMovies(POPAPI);
+            container.innerHTML = ''
             renderMovies(popularMovies)
         };
         if (target && target.matches('#upcoming')) {
-            const upcomingMovies = await movieService.showComming()
+            numberOfPage = 1;
+            const upcomingMovies = await movieService.getMovies(UPCOMING)
+            container.innerHTML = ''
             renderMovies(upcomingMovies)
         };
     });
 
     paginationBtn?.addEventListener('click', async () => {
-        numberOfPage++;
+        numberOfPage++
         const nextPageMovies = await movieService.paginatePage(numberOfPage)
         console.log(nextPageMovies)
         renderMovies(nextPageMovies)
