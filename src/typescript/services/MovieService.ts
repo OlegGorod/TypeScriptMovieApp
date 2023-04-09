@@ -1,7 +1,7 @@
 class MovieService {
 
-     lastURL!: string;
-   
+    lastURL!: string;
+
     getResource = async (url: string) => {
         const response = await fetch(url);
         if (!response.ok) {
@@ -17,10 +17,9 @@ class MovieService {
     }
 
     paginatePage = async (numberOfPage: number) => {
-        
+
         const regex = /page=\d+/;
         const newURL = this.lastURL.replace(regex, 'page=');
-        console.log(newURL + numberOfPage)
         const nextPageOfMovies = await this.getMovies(newURL + numberOfPage);
         return nextPageOfMovies;
     }
