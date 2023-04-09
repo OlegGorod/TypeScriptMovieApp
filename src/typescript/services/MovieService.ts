@@ -13,7 +13,6 @@ class MovieService {
     getMovies = async (url: string) => {
         this.lastURL = url;
         const response = await this.getResource(this.lastURL);
-        console.log(response)
         return response
     }
 

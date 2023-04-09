@@ -13,16 +13,10 @@ interface MovieObject {
 }
 
 const renderMovies = async (data: MovieData) => {
-    const {container, favoriteModal} = Elements;
+    const {container} = Elements;
 
     function checkHeart(id: number) {
         if (favorMovies.includes(String(id))) {
-            const cardElement = document.getElementById(String(id));
-            console.log(cardElement)
-            // const clonedCardElement = cardElement?.cloneNode(true) as HTMLDivElement;
-            // clonedCardElement.id = `cloned-card-${id}`;
-            // clonedCardElement.children[1].setAttribute('fill', 'red');
-            // favoriteModal.appendChild(clonedCardElement)
             return 'red'
         } else return '#ff000078'
     }

@@ -25,8 +25,7 @@ export async function render(): Promise<void> {
     if (storedMovies) {
         favorMovies = JSON.parse(storedMovies);
     }
-    console.log(favorMovies)
-   renderMovies(listOfMovies)
+    renderMovies(listOfMovies)
 
 
 
@@ -63,7 +62,6 @@ export async function render(): Promise<void> {
     const handleSearch = async () => {
         const searchValue = searchInput.value;
         const searchMovies = await movieService.getMovies(SEARCHAPI + searchValue);
-        console.log(searchMovies)
         container.innerHTML = ''
         renderMovies(searchMovies)
         searchInput.value = ''
@@ -73,7 +71,6 @@ export async function render(): Promise<void> {
         handleSearch();
     });
 
-    addFavorite();
     function addFavorite() {
         document.querySelector('.col-12.p-2')!.innerHTML = '';
         container.addEventListener('click', (event) => {
@@ -95,6 +92,7 @@ export async function render(): Promise<void> {
             }
         })
     }
+    addFavorite();
 
     function addMovie(movieId: string, clonedCardElement: HTMLDivElement, heart: Element) {
         if (!favorMovies.includes(movieId)) {
@@ -108,8 +106,19 @@ export async function render(): Promise<void> {
     }
 
     function addToFavoritesModal() {
-        const cardElement = document.querySelector('.col-12.p-2') as HTMLDivElement;
-        console.log(cardElement.children[0])
+        const cardElement = Array.from(document.querySelectorAll('.card.shadow-sm'));
+        const favoriteCards = cardElement.filter((card) => {
+            return favorMovies.includes(card.id)
+        })
+        favoriteCards.map(card => {
+            const clonedCardElement = card.cloneNode(true) as HTMLDivElement;
+            clonedCardElement.id = `cloned-card-${card.id}`;
+            favoriteModal.firstElementChild?.appendChild(clonedCardElement);
+            const heart = card.children[1];
+            clonedCardElement.addEventListener('click', () => {
+                removeMovie(card.id, heart);
+            });
+        })
     }
     addToFavoritesModal();
 
