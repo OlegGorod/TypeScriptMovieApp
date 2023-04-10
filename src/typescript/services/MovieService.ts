@@ -17,11 +17,17 @@ class MovieService {
     }
 
     paginatePage = async (numberOfPage: number) => {
+        if (this.lastURL.includes('page=')) {
+            const regex = /page=\d+/;
+            const newURL = this.lastURL.replace(regex, 'page=');
+            const nextPageOfMovies = await this.getMovies(newURL + numberOfPage);
+            return nextPageOfMovies;
+        } else {
+            this.lastURL += '&page=';
 
-        const regex = /page=\d+/;
-        const newURL = this.lastURL.replace(regex, 'page=');
-        const nextPageOfMovies = await this.getMovies(newURL + numberOfPage);
-        return nextPageOfMovies;
+            const nextPageOfMovies = await this.getMovies(this.lastURL + numberOfPage);
+            return nextPageOfMovies
+        }
     }
 }
 

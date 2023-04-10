@@ -6,53 +6,53 @@ import { apiLinks } from "../services/apiLinks";
 
 const initTrigggers = () => {
 
-    const { btnTrigger, container, paginationBtn, searchInput, submitButton } = Elements;
+    const { btnTrigger, container, paginationBtn, searchInput, submitButton, form } = Elements;
     const { RATEDAPI, POPAPI, UPCOMING, SEARCHAPI } = apiLinks;
-    
+
     let numberOfPage = 1;
-    
-    
-    btnTrigger?.addEventListener('click', async (e) => {
-        const target = e.target as Element;
-        if (target && target.matches('#top_rated')) {
-            numberOfPage = 1
-            const ratedMovies = await movieService.getMovies(RATEDAPI);
-            container.innerHTML = ''
-            renderMovies(ratedMovies)
-    
-        };
-        if (target && target.matches('#popular')) {
-            numberOfPage = 1
-            const popularMovies = await movieService.getMovies(POPAPI);
-            container.innerHTML = ''
-            renderMovies(popularMovies)
-        };
-        if (target && target.matches('#upcoming')) {
-            numberOfPage = 1;
-            const upcomingMovies = await movieService.getMovies(UPCOMING)
-            container.innerHTML = ''
-            renderMovies(upcomingMovies)
-        };
-    });
-    
+
+    async function handleButtonClick(event: MouseEvent) {
+        const target = event.target as Element;
+        numberOfPage = 1;
+        container.innerHTML = '';
+        let movies;
+        switch (target.id) {
+            case 'top_rated':
+                movies = await movieService.getMovies(RATEDAPI);
+                break;
+            case 'popular':
+                movies = await movieService.getMovies(POPAPI);
+                break;
+            case 'upcoming':
+                movies = await movieService.getMovies(UPCOMING);
+                break;
+            default:
+                return;
+        }
+        renderMovies(movies)
+    }
+    btnTrigger.addEventListener('click', handleButtonClick)
+
     paginationBtn?.addEventListener('click', async () => {
         numberOfPage++
         const nextPageMovies = await movieService.paginatePage(numberOfPage)
         renderMovies(nextPageMovies)
-    
+
     });
-    
-    const handleSearch = async () => {
+
+    const handleSearch = async (event: SubmitEvent | MouseEvent) => {
+        event.preventDefault();
+        numberOfPage = 1;
         const searchValue = searchInput.value;
         const searchMovies = await movieService.getMovies(SEARCHAPI + searchValue);
         container.innerHTML = ''
         renderMovies(searchMovies)
         searchInput.value = ''
     }
-    
-    submitButton.addEventListener("click", (e) => {
-        handleSearch();
-    });
+
+    submitButton.addEventListener('click', (event) => handleSearch(event));
+    form.addEventListener('submit', handleSearch);
+
 }
 
 export default initTrigggers;
