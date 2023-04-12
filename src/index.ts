@@ -1,6 +1,6 @@
 import { addFavorite, addToFavoritesModal } from "./typescript/components/addMovies";
 import renderMovies from "./typescript/components/renderMovies";
-import initTrigggers from "./typescript/components/triggers";
+import initTriggers from "./typescript/components/triggers";
 import { movieService } from "./typescript/services/MovieService";
 import { apiLinks } from "./typescript/services/apiLinks";
 
@@ -19,7 +19,7 @@ export async function render(): Promise<void> {
     renderMovies(listOfMovies)
     addFavorite()
     addToFavoritesModal();
-    initTrigggers();
+    initTriggers();
 
 
 

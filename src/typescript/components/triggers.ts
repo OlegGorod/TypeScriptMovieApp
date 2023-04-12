@@ -4,7 +4,7 @@ import { movieService } from "../services/MovieService";
 import { apiLinks } from "../services/apiLinks";
 
 
-const initTrigggers = () => {
+const initTriggers = () => {
 
     const { btnTrigger, container, paginationBtn, searchInput, submitButton, form } = Elements;
     const { RATEDAPI, POPAPI, UPCOMING, SEARCHAPI } = apiLinks;
@@ -55,4 +55,4 @@ const initTrigggers = () => {
 
 }
 
-export default initTrigggers;
+export default initTriggers;

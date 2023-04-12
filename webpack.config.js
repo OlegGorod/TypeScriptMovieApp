@@ -1,5 +1,10 @@
 /* eslint-disable */
 const path = require('path');
+const webpack = require('webpack');
+
+const processDefinePlugin = new webpack.DefinePlugin({
+    'process.env.APIKEY': JSON.stringify(process.env.NODE_ENV || '04c35731a5ee918f014970082a0088b1')
+})
 
 module.exports = {
     entry: ['babel-polyfill', './index.ts'],
@@ -41,4 +46,7 @@ module.exports = {
         port: 8000
     },
     devtool: 'source-map',
+    plugins: [
+        processDefinePlugin
+    ]
 };

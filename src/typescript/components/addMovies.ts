@@ -42,7 +42,7 @@ function addMovie(movieId: string, clonedCardElement: HTMLDivElement, heart: Ele
 export function addToFavoritesModal() {
     const { IDAPI } = apiLinks;
     favorMovies.forEach(async movieId => {
-        const movie = await movieService.getMovies(`${IDAPI}${movieId}?${APIKEY}`);
+        const movie = await movieService.getMovies(`${IDAPI}${movieId}?api_key=${APIKEY}`);
         const {id, poster_path, overview, release_date} = movie;
         const movieCard = document.createElement('div');
         movieCard.innerHTML = movieCardTemplate(id, poster_path, overview, release_date)

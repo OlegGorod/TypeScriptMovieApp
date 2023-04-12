@@ -17,7 +17,7 @@ interface MovieObject {
 const renderMovies = async (data: MovieData) => {
     const { container } = Elements;
     let filteredPoster: MovieObject[] = [];
-    filteredPoster = data.results.filter((item) => item.poster_path && item.backdrop_path);
+    filteredPoster = data.results.filter((item) => item.poster_path);
     generateRandomPoster(filteredPoster)
     filteredPoster.map(item => {
         const movieCard = document.createElement('div');
